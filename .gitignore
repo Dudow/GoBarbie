@@ -3,3 +3,7 @@ dist
 yarn.lock
 .vscode
 src/config
+tmp/*
+temp/*
+
+!tmp/.gitkeep
