@@ -1,5 +1,8 @@
 import {container} from 'tsyringe'
 
+import '@modules/Users/providers'
+import './providers'
+
 import AppointmentRepoInterface from '@modules/Appointments/repositories/AppointmentsRepositoryInterface'
 import AppointmentsRepository from '@modules/Appointments/infra/typeorm/repositories/AppointmentRepository'
 
