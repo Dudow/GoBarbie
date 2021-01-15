@@ -6,12 +6,23 @@ import AuthenticateUserService from './AuthenticateUserService'
 import CreateUserService from './CreateUserService'
 import AppError from '@shared/errors/AppError'
 
+let fakeUserRepository: FakeUserRepository
+let fakeHashProvider: FakeHashProvider
+let authUser: AuthenticateUserService
+let createUser: CreateUserService
+
+
 describe('AuthenticateUser', () => {
+
+  beforeEach(() => {
+    fakeUserRepository = new FakeUserRepository()
+    fakeHashProvider = new FakeHashProvider()
+    authUser = new AuthenticateUserService(fakeUserRepository, fakeHashProvider)
+    createUser = new CreateUserService(fakeUserRepository, fakeHashProvider)
+
+  })
+
   it('should be able to auth a new user', async () => {
-    const fakeUserRepository = new FakeUserRepository()
-    const fakeHashProvider = new FakeHashProvider()
-    const authUser = new AuthenticateUserService(fakeUserRepository, fakeHashProvider)
-    const createUser = new CreateUserService(fakeUserRepository, fakeHashProvider)
 
     const user = await createUser.execute({
       name: 'aaa',
@@ -30,9 +41,6 @@ describe('AuthenticateUser', () => {
   })
 
   it('should not be able to auth a non user', async () => {
-    const fakeUserRepository = new FakeUserRepository()
-    const fakeHashProvider = new FakeHashProvider()
-
     const authUser = new AuthenticateUserService(
       fakeUserRepository,
       fakeHashProvider
@@ -48,11 +56,6 @@ describe('AuthenticateUser', () => {
   })
 
   it('should not be able to auth with wrong password', async () => {
-    const fakeUserRepository = new FakeUserRepository()
-    const fakeHashProvider = new FakeHashProvider()
-    const authUser = new AuthenticateUserService(fakeUserRepository, fakeHashProvider)
-    const createUser = new CreateUserService(fakeUserRepository, fakeHashProvider)
-
     const user = await createUser.execute({
       name: 'aaa',
       email: 'aaa@aaa.com',

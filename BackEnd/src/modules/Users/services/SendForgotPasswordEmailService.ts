@@ -1,4 +1,5 @@
 import {inject, injectable} from 'tsyringe'
+import path from 'path'
 
 import User from '../infra/typeorm/entities/User'
 import AppError from '@shared/errors/AppError'
@@ -26,15 +27,30 @@ class SendForgotPasswordEmailService {
 
   public async execute({email}:Request):Promise<void>{
 
-    const checkUserExists = await this.userRepository.findByEmail(email)
+    const user = await this.userRepository.findByEmail(email)
 
-    if(!checkUserExists){
+    if(!user){
       throw new AppError('User does not exist')
     }
 
-    await this.userTokensRepository.generate(checkUserExists.id)
+    const {token} =  await this.userTokensRepository.generate(user.id)
 
-    this.mailProvider.sendEmail(email, 'senhinha')
+    const forgotPasswordTemplate = path.resolve(__dirname, '..', 'views' ,'forgot_password.hbs')
+
+    await this.mailProvider.sendEmail({
+      to: {
+        name: user.name,
+        email: user.email
+      },
+      subject: 'Recuperação de senha',
+      templateData: {
+        file: forgotPasswordTemplate,
+        variables: {
+          name: user.name,
+          link: `http://localhost:3000/reset_password?token=${token}`
+        }
+      }
+    })
   }
 }
 

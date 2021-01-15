@@ -4,11 +4,20 @@ import FakeHashProvider from '../providers/hashProvider/fakes/fakeHashProvider'
 import CreateUserService from './CreateUserService'
 import AppError from '@shared/errors/AppError'
 
+let fakeUserRepository: FakeUserRepository
+let fakeHashProvider: FakeHashProvider
+let createUser: CreateUserService
+
+
 describe('CreateUser', () => {
+
+  beforeEach(() => {
+    fakeUserRepository = new FakeUserRepository()
+    fakeHashProvider = new FakeHashProvider()
+    createUser = new CreateUserService(fakeUserRepository, fakeHashProvider)
+  })
+
   it('should be able to create a new user', async () => {
-    const fakeUserRepository = new FakeUserRepository()
-    const fakeHashProvider = new FakeHashProvider()
-    const createUser = new CreateUserService(fakeUserRepository, fakeHashProvider)
 
     const user = await createUser.execute({
       name: 'aaa',
@@ -21,17 +30,13 @@ describe('CreateUser', () => {
   })
 
   it('should not be able to create a new user with a repeated email', async () => {
-    const fakeUserRepository = new FakeUserRepository()
-    const fakeHashProvider = new FakeHashProvider()
-    const createUser = new CreateUserService(fakeUserRepository, fakeHashProvider)
-
     await createUser.execute({
       name: 'aaa',
       email: 'aaa@aaa.com',
       password: '123456'
     })
 
-    expect(
+    await expect(
       createUser.execute({
         name: 'aaa',
         email: 'aaa@aaa.com',
