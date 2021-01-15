@@ -9,5 +9,9 @@ import AppointmentsRepository from '@modules/Appointments/infra/typeorm/reposito
 import UsersRepoInterface from '@modules/Users/repositories/UsersRepositoryInterface'
 import UsersRepository from '@modules/Users/infra/typeorm/repositories/UsersRepository'
 
+import UserTokensRepoInterface from '@modules/Users/repositories/UserTokensRepositoryInterface'
+import UserTokensRepository from '@modules/Users/infra/typeorm/repositories/UserTokensRepository'
+
 container.registerSingleton<AppointmentRepoInterface>('AppointmentsRepository', AppointmentsRepository)
 container.registerSingleton<UsersRepoInterface>('UsersRepository', UsersRepository)
+container.registerSingleton<UserTokensRepoInterface>('UserTokensRepository', UserTokensRepository)

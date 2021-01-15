@@ -5,7 +5,7 @@ import UserDTO from '@modules/Users/dto/CreateUserDTO'
 
 import User from '../../infra/typeorm/entities/User'
 
-class UsersRepository implements UsersRepositoryInterface {
+class FakeUsersRepository implements UsersRepositoryInterface {
 
   private users: User[] = []
 
@@ -16,7 +16,6 @@ class UsersRepository implements UsersRepositoryInterface {
   }
 
   public async findByEmail(email: string): Promise<User | undefined>{
-    console.log(this.users)
 
     const findUser = this.users.find(user => user.email === email)
 
@@ -43,4 +42,4 @@ class UsersRepository implements UsersRepositoryInterface {
   }
 }
 
-export default UsersRepository
+export default FakeUsersRepository
